@@ -43,7 +43,7 @@ def pre_process_projects_df(df):
     df.fillna('', inplace=True)
     return df
 
-def make_proj_embed(projects, vectors, stopwords):
+def make_proj_embed(project_path, vectors, stopwords):
     """
 
     Parameters
@@ -65,14 +65,14 @@ def make_proj_embed(projects, vectors, stopwords):
     with open(stopwords, 'r') as f:
         stop_words = set(f.read().strip().split("\n"))
     print('Getting Projects')
-    projects = pd.read_csv(projects)
+    projects = pd.read_csv(project_path, encoding='ISO-8859-1')
     projects = pre_process_projects_df(projects)
     projects['spac_text'] = projects.apply(lambda x: nlp(x['Project Name'] + ' ' + x['Project Description'])
                                                       , axis=1)
     projects['fasttext_embedding'] = projects['spac_text'].apply(lambda x: create_embedding(x, w2v, stop_words))
     projects.drop('spac_text', inplace=True)
     print('Output to csv')
-    projects.to_csv(projects, index=False, encoding='utf8')
+    projects.to_csv(project_path, index=False)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Create embeddings for project')
