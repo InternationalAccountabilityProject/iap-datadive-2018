@@ -1,0 +1,5 @@
+_ADMIN/
+.ipynb_checkpoints/
+.idea/
+venv/
+dependencies/wiki-news-300d-1M.vec
