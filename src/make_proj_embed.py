@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from gensim.models import KeyedVectors
 import spacy
 import argparse
@@ -38,7 +39,7 @@ def pre_process_projects_df(df):
     -------
     Dataframe after preprocessing
     """
-    df['Project Description'] = df.apply(lambda x: x if x != 'None' else None)
+    df['Project Description'] = df["Project Description"].apply(lambda x: x if x != 'None' else None)
     df.fillna('', inplace=True)
     df.fillna('', inplace=True)
     return df
@@ -88,4 +89,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
