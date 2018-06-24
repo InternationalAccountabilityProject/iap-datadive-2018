@@ -3,3 +3,4 @@ _ADMIN/
 .idea/
 venv/
 dependencies/wiki-news-300d-1M.vec
+Notebooks/tf_idf.ipynb

@@ -8,7 +8,7 @@ nlp = spacy.load('en')
 
 W2V_EMBEDDINGS = "dependencies/wiki-news-300d-1M.vec"
 PROJECT_EMBEDDINGS = "data/EWS_Published Project_Listing_DD.csv"
-STOP_WORDS = "stopwords.csv"
+STOP_WORDS = "dependencies/stop-word-list.txt"
 
 class ArticleProjectMatcher(object):
     """
