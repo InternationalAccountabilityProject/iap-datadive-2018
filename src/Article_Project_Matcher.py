@@ -45,7 +45,7 @@ class ArticleProjectMatcher(object):
         article_embedding = create_embedding(article)
         if article_embedding is None:
             return match_scores
-        for project in self.project_embeddings:
+        for project in self.project_ids:
             if self.project_embeddings[project] is not None:
                 sim_score = euclidean_distances(article_embedding.reshape(1, -1)
                                                 , self.project_embeddings[project].reshape(1, -1))[0][0]
