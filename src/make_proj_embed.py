@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from gensim.models import KeyedVectors
 import spacy
 import argparse
@@ -38,7 +39,7 @@ def pre_process_projects_df(df):
     -------
     Dataframe after preprocessing
     """
-    df['Project Description'] = df.apply(lambda x: x if x != 'None' else None)
+    df['Project Description'] = df["Project Description"].apply(lambda x: x if x != 'None' else None)
     df.fillna('', inplace=True)
     df.fillna('', inplace=True)
     return df
@@ -70,7 +71,7 @@ def make_proj_embed(project_path, vectors, stopwords):
     projects['spac_text'] = projects.apply(lambda x: nlp(x['Project Name'] + ' ' + x['Project Description'])
                                                       , axis=1)
     projects['fasttext_embedding'] = projects['spac_text'].apply(lambda x: create_embedding(x, w2v, stop_words))
-    projects.drop('spac_text', inplace=True)
+    projects.drop('spac_text', inplace=True, axis=1)
     print('Output to csv')
     projects.to_csv(project_path, index=False)
 
@@ -88,4 +89,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
