@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 import pandas as pd
 nlp = spacy.load('en')
 
-W2V_EMBEDDINGS = "dependencies/wiki-news-300d-1M.vec"
+W2V_EMBEDDINGS = "dependencies/wiki.en.vec"
 PROJECT_EMBEDDINGS = "data/EWS_Published Project_Listing_DD.csv"
 STOP_WORDS = "dependencies/stop-word-list.txt"
 
@@ -15,13 +15,16 @@ class ArticleProjectMatcher(object):
     A Python object that ingests an article as input, and outputs the
     semantic similarity score between the articles and all projects.
     """
-    def __init__(self, project_ids, project_embeddings, w2v, stopwords):
-        self.project_ids = project_ids
+    def __init__(self, project_embeddings, w2v, stopwords, project_ids = None):
         self.w2v = KeyedVectors.load_word2vec_format(w2v)
         with open(stopwords, 'r') as f:
             self.stopwords = set(f.read().strip().split("\n"))
         project_df = pd.read_csv(project_embeddings, encoding='ISO-8859-1')
-        self.project_embeddings = {x[0]: x[1] for x in project_df[['Project ID', 'fasttext_embedding']].values}
+        self.project_embeddings = {x[0]: x[1] for x in project_df[['ProjectNumber', 'fasttext_embedding']].values}
+        if project_ids is not None:
+            self.project_ids = project_ids
+        else:
+            self.project_ids = project_df["ProjectNumber"].get_values()
 
     def create_embedding(self, textbody):
         """
@@ -42,7 +45,7 @@ class ArticleProjectMatcher(object):
         article and all project embeddings stored in the class memory.
         """
         match_scores = []
-        article_embedding = create_embedding(article)
+        article_embedding = self.create_embedding(article)
         if article_embedding is None:
             return match_scores
         for project in self.project_ids:
@@ -53,3 +56,8 @@ class ArticleProjectMatcher(object):
             else:
                 match_scores.append((project, None))
         return match_scores
+
+def main(article_body):
+    apm = ArticleProjectMatcher(PROJECT_EMBEDDINGS, W2W2V_EMBEDDINGS, STOP_WORDS)
+    match_scores = apm.compute_similarity(article_body)
+    return match_scores
